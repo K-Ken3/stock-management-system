@@ -248,7 +248,11 @@ function App() {
     setBusy(false)
     if (error) notify('error', error.message)
     else {
-      try { await loadBusiness(session.user.id); notify('success', 'Your business workspace is ready.') }
+      try {
+        if (!session?.user?.id) throw new Error('Authentication required')
+        await loadBusiness(session.user.id)
+        notify('success', 'Your business workspace is ready.')
+      }
       catch (reason) { notify('error', reason instanceof Error ? reason.message : 'Business setup failed.') }
     }
   }
